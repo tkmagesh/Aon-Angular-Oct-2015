@@ -1,0 +1,19 @@
+Module - logical grouping of application components
+
+To organize UI logic
+====================
+Scope
+Directive - connects HTML with Scope
+Filter - transforms the data for presentation purposes
+Controller - function to customize the scope
+
+To organize NON UI logic
+=========================
+Factory
+Service
+Provider
+Value
+Constant
+
+`
+
