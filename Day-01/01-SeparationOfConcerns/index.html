@@ -74,9 +74,19 @@
             $("#txtBasic").change(function(){
                 calculator.set('basic', this.value.toInt());
             });
+            calculator.addChangeListener('basic', function(){
+                $("#txtBasic").val(calculator.get('basic'));
+            });
+
+
             $("#txtHra").change(function(){
                 calculator.set('hra', this.value.toInt());
             });
+            calculator.addChangeListener('hra', function(){
+                $("#txtHra").val(calculator.get('hra'));
+            });
+
+
             $("#txtDa").change(function(){
                 calculator.set('da', this.value.toInt());
             });
@@ -92,12 +102,8 @@
                 $("#divResult").html(calculator.get('salary'));
             });
             
-            calculator.addChangeListener('basic', function(){
-                $("#txtBasic").val(calculator.get('basic'));
-            });
-            calculator.addChangeListener('hra', function(){
-                $("#txtHra").val(calculator.get('hra'));
-            });
+
+
             calculator.addChangeListener('da', function(){
                 $("#txtDa").val(calculator.get('da'));
             });

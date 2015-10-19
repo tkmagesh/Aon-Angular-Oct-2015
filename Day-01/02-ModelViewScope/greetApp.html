@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Greet App</title>
+    <style>
+        #divMessage{
+            color : red;
+            font-weight: bold;
+            font-size: 18pt;
+        }
+    </style>
+    <script src="jquery-2.1.4.js"></script>
+    <script src="angular.js"></script>
+    <script>
+    function Greeter(){
+        this.name = '';
+        this.greetMsg = '';
+    }
+    Greeter.prototype.greet = function(){
+        var thisHour = new Date().getHours();
+        this.greetMsg = 'Hi ' + this.name + (thisHour < 12 ? ', Good Morning!' : ', Good Afternoon!');
+    }
+    $(function(){
+        angular.bootstrap(document.body, []);
+        window.scope = angular.element(document.body).scope();
+
+        scope.greeter = new Greeter();
+
+        $("#txtName").change(function(){
+            var self = this;
+            scope.$apply(function(){
+                scope.greeter.name = self.value;
+            });
+        });
+
+        $("#btnGreet").click(function(){
+            scope.$apply(function(){
+                scope.greeter.greet();
+            });
+        });
+
+        scope.$watch('greeter.greetMsg', function(newValue, oldValue){
+            $("#divMessage").html(newValue);
+        });
+        scope.$watch('greeter.name', function(newValue, oldValue){
+            $("#txtName").val(newValue);
+        });
+    })
+
+    </script>
+</head>
+<body>
+    <h1>Greet App</h1>
+    <hr>
+    <section class="content">
+        <label for="">Name :</label>
+        <input type="text" name="" id="txtName">
+        <input type="button" value="Greet" id="btnGreet">
+        <div id="divMessage">[Message will be displayed here!]</div>
+    </section>
+</body>
+</html>

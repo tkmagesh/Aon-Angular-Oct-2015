@@ -10,6 +10,55 @@
             font-size: 18pt;
         }
     </style>
+    <script src="jquery-2.1.4.js"></script>
+    <script>
+    function Greeter(){
+        var data = {
+            name : '',
+            greetMsg : ''
+        };
+        this.get = function(attrName){
+            return data[attrName];
+        };
+        this.set = function(attrName, value){
+            data[attrName] = value;
+            var handlerFns = eventHandlers[attrName];
+            handlerFns.forEach(function(handlerFn){
+                handlerFn();
+            });
+        }
+        var eventHandlers = {
+            name : [],
+            greetMsg : []
+        };
+        this.addChangeListener = function(attrName, listenerFn){
+            eventHandlers[attrName].push(listenerFn);
+        };
+    }
+    Greeter.prototype.greet = function(){
+        var thisHour = new Date().getHours();
+        var msg = 'Hi ' + this.get('name') + (thisHour < 12 ? ', Good Morning!' : ', Good Afternoon!');
+        this.set('greetMsg', msg);
+    }
+    $(function(){
+        window.greeter = new Greeter();
+        $("#txtName").change(function(){
+            greeter.set('name', this.value);
+        });
+
+        $("#btnGreet").click(function(){
+            greeter.greet();
+        });
+
+        greeter.addChangeListener('greetMsg', function(){
+            $("#divMessage").html(greeter.get('greetMsg'));
+        });
+        greeter.addChangeListener('name', function(){
+            $("#txtName").val(greeter.get('name'));
+        });
+    })
+
+    </script>
 </head>
 <body>
     <h1>Greet App</h1>
