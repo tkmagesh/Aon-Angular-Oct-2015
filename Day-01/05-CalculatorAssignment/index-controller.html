@@ -10,7 +10,6 @@
             font-size: 24pt;
         }
     </style>
-    <script src="jquery-2.1.4.js"></script>
     <script src="angular.js"></script>
     <script>
         var calculator = {
@@ -27,28 +26,24 @@
                 return x / y;
             }
         }
-        $(function(){
-            angular.bootstrap(document.body, []);
-            window.scope = angular.element(document.body).scope();
-
-            scope.number1 = '';
-            scope.number2 = '';
-            scope.result = '';
-            scope.operation = '';
-            scope.calculate = function(){
-                var n1 = parseInt(scope.number1, 10),
-                    n2 = parseInt(scope.number2, 10);
-                scope.result = calculator[scope.operation](n1, n2);
+        var myApp = angular.module("myApp", []);
+        myApp.controller("calculatorController", function($scope){
+            $scope.number1 = '';
+            $scope.number2 = '';
+            $scope.result = '';
+            $scope.operation = '';
+            $scope.calculate = function(){
+                var n1 = parseInt($scope.number1, 10),
+                    n2 = parseInt($scope.number2, 10);
+                $scope.result = calculator[$scope.operation](n1, n2);
             }
         });
-
-
     </script>
 </head>
-<body>
+<body ng-app="myApp">
     <h1>Calculator</h1>
     <hr>
-    <section class="content">
+    <section class="content" ng-controller="calculatorController">
         <input type="text" name="" id="" ng-model="number1">
         <select name="" id="" ng-model="operation">
             <option value="add">Add</option>
