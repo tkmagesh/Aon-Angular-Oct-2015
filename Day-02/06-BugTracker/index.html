@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <style>
+        .stats{
+            font-size: 18pt;
+        }
+        section{
+            margin-bottom: 10px;
+        }
+        .closed {
+            color: red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        li span{
+            cursor: pointer;
+        }
+        li{
+            border: 1px solid gray;
+            border-radius: 5px;
+            background-color: #e7e7e7;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        ol{
+            list-style: none;
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bug Tracker</h1>
+    <section class="stats">
+        <span class="closed">3</span>
+        /
+        <span>10</span>
+    </section>
+    <section class="search">
+        <label for="">Search :</label>
+        <input type="text" name="" id="">
+    </section>
+    <section class="sort">
+        <label for="">Order By:</label>
+        <input type="text" name="" id="">
+    </section>
+    <section class="list">
+        <label for="">Bug :</label>
+        <input type="text" name="" id="">
+        <input type="button" value="Add Bug">
+        <input type="button" value="Remove Closed">
+        <ol>
+            <li ><span class="closed">Stack overflow error</span></li>
+            <li><span>Object reference not set to an instance of an object</span></li>
+        </ol>
+    </section>
+</body>
+</html>

@@ -1,0 +1,14 @@
+1. Add a new bug
+2. List all the bugs
+3. Toggle the completion status of the bug
+4. Remove completed bugs
+5. Display statistics
+6. Search for bugs
+7. Sort the bugs
+8. Improvise the bug display
+9. Display 'createdAt' for the bug
+10. Persist the bugs in the localStorage
+11. Persist the bugs in the server
+==================
+Create a Project Module with list the projects
+Link the project with the bugs
