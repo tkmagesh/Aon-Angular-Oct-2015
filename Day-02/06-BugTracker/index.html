@@ -16,8 +16,16 @@
             font-style: italic;
             font-weight: bold;
         }
-        li span{
+        li div{
             cursor: pointer;
+        }
+        li .bugName{
+            font-size: 16pt;
+        }
+        li .dateValue{
+            font-style: italic;
+            color: gray;
+            font-size: small;
         }
         li{
             border: 1px solid gray;
@@ -31,30 +39,109 @@
             width: 60%;
         }
     </style>
+    <script src="angular.js"></script>
+    <script src="moment.js"></script>
+    <script src="utils.js"></script>
+    <script>
+
+
+
+
+    var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
+
+
+
+   /* bugTrackerApp.value('Bug', function(defaults){
+        this.name = defaults.name || '';
+        this.isClosed = defaults.isClosed || false;
+        this.toggle = function(){
+            this.isClosed = !this.isClosed;
+        }
+    });*/
+
+    bugTrackerApp.value("dateService", {
+        now : function(){
+            return new Date();
+        }
+    })
+
+    bugTrackerApp.factory("Bug", function(dateService){
+        function Bug(defaults){
+            this.name = defaults.name || '';
+            this.isClosed = defaults.isClosed || false;
+            this.createdAt = defaults.createdAt || dateService.now();
+        }
+        Bug.prototype.toggle = function(){
+            this.isClosed = !this.isClosed;
+        }
+        return Bug;
+    });
+
+    bugTrackerApp.controller("bugsController", function($scope, Bug){
+
+        $scope.bugs = [
+           new Bug({name : 'Stackoverflow error', createdAt : new Date(2015, 9, 20)}),
+           new Bug({name : 'Object reference not found', createdAt : new Date(2015, 9, 20)}),
+           new Bug({name : 'Server communication failure', createdAt : new Date(2015, 9, 18)}),
+           new Bug({name : 'Nothing works', createdAt : new Date(2015, 9, 19)})
+        ];
+        $scope.newBugName = '';
+        $scope.addNew = function(){
+            var newBug = new Bug({name : $scope.newBugName});
+            $scope.bugs.push(newBug);
+        };
+        $scope.toggleStatus = function(bug){
+            bug.toggle();
+        };
+        $scope.getClosedCount = function(){
+            var result = 0;
+            for(var i=0; i< $scope.bugs.length; i++)
+                if ($scope.bugs[i].isClosed)
+                    ++result;
+            return result;
+        };
+        $scope.removeClosed = function(){
+            for(var i= $scope.bugs.length-1; i>=0; i--){
+                if ($scope.bugs[i].isClosed)
+                    $scope.bugs.splice(i,1);
+            }
+        }
+    });
+
+
+
+    </script>
 </head>
-<body>
+<body ng-app="bugTrackerApp" ng-controller="bugsController">
     <h1>Bug Tracker</h1>
     <section class="stats">
-        <span class="closed">3</span>
+        <span class="closed">{{getClosedCount()}}</span>
         /
-        <span>10</span>
+        <span>{{bugs.length}}</span>
     </section>
     <section class="search">
         <label for="">Search :</label>
-        <input type="text" name="" id="">
+        <input type="text" ng-model="searchBug.name">
     </section>
     <section class="sort">
         <label for="">Order By:</label>
-        <input type="text" name="" id="">
+        <input type="text" ng-model="sortBugsBy">
+        <label for="">Descending ? :</label>
+        <input type="checkbox" ng-model="sortBugOrder">
     </section>
     <section class="list">
         <label for="">Bug :</label>
-        <input type="text" name="" id="">
-        <input type="button" value="Add Bug">
-        <input type="button" value="Remove Closed">
+        <input type="text" ng-model="newBugName">
+        <input type="button" value="Add Bug" ng-click="addNew()">
+        <input type="button" value="Remove Closed" ng-click="removeClosed()">
         <ol>
-            <li ><span class="closed">Stack overflow error</span></li>
-            <li><span>Object reference not set to an instance of an object</span></li>
+            <li ng-repeat="bug in bugs | filter:searchBug | orderBy:sortBugsBy:sortBugOrder" >
+                <div class='bugName'
+                    ng-class="{closed : bug.isClosed}"
+                    ng-click="toggleStatus(bug)"
+                >{{bug.name | trimText:30}}</div>
+                <div class='dateValue'>{{bug.createdAt | toMoment}}</div>
+            </li>
         </ol>
     </section>
 </body>
