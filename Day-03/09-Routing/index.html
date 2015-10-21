@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing</title>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        var myApp = angular.module("myApp", ["ngRoute"]);
+
+        myApp.config(function($routeProvider){
+            $routeProvider
+                .when("/products",{
+                    templateUrl : "templates/productsTemplate.html",
+                    controller : "productsController"
+                })
+                .when("/customers",{
+                    templateUrl : "templates/customersTemplate.html"
+                })
+                .when("/products/:id",{
+                      templateUrl : "templates/productInfoTemplate.html",
+                      controller: "productInfoController"
+                })
+                .otherwise({
+                    redirectTo : "/products"
+                });
+        });
+
+        myApp.run(function($rootScope){
+            $rootScope.loggedInAt = new Date();
+        });
+
+        myApp.factory("productsService", function(){
+            return {
+                getAll : function(){
+                    return [
+                        {id : 1, name : "Pen", cost : 20, units : 100, desc : "Non summis probant vidisse, nam elit offendit. Hic consequat o fabulas, esse quo incurreret. Non consequat quo excepteur, deserunt illum dolore offendit illum, fore et mentitum ex singulis do quid ullamco. Nam minim nostrud exercitation. Possumus tractavissent si expetendis. Vidisse culpa ullamco, expetendis familiaritatem ex occaecat, ita ab dolore cillum nisi non litteris in expetendis. Hic multos coniunctione. Malis ad expetendis si aute."},
+                        {id : 7, name : "Hen", cost : 100, units : 20, desc : "Non summis probant vidisse, nam elit offendit. Hic consequat o fabulas, esse quo incurreret. Non consequat quo excepteur, deserunt illum dolore offendit illum, fore et mentitum ex singulis do quid ullamco. Nam minim nostrud exercitation. Possumus tractavissent si expetendis. Vidisse culpa ullamco, expetendis familiaritatem ex occaecat, ita ab dolore cillum nisi non litteris in expetendis. Hic multos coniunctione. Malis ad expetendis si aute."},
+                        {id : 9, name : "Ten", cost : 10, units : 10, desc : "Non summis probant vidisse, nam elit offendit. Hic consequat o fabulas, esse quo incurreret. Non consequat quo excepteur, deserunt illum dolore offendit illum, fore et mentitum ex singulis do quid ullamco. Nam minim nostrud exercitation. Possumus tractavissent si expetendis. Vidisse culpa ullamco, expetendis familiaritatem ex occaecat, ita ab dolore cillum nisi non litteris in expetendis. Hic multos coniunctione. Malis ad expetendis si aute."},
+                        {id : 4, name : "Den", cost : 150, units : 50, desc : "Non summis probant vidisse, nam elit offendit. Hic consequat o fabulas, esse quo incurreret. Non consequat quo excepteur, deserunt illum dolore offendit illum, fore et mentitum ex singulis do quid ullamco. Nam minim nostrud exercitation. Possumus tractavissent si expetendis. Vidisse culpa ullamco, expetendis familiaritatem ex occaecat, ita ab dolore cillum nisi non litteris in expetendis. Hic multos coniunctione. Malis ad expetendis si aute."},
+                        {id : 6, name : "Zen", cost : 10000, units : 0, desc : "Non summis probant vidisse, nam elit offendit. Hic consequat o fabulas, esse quo incurreret. Non consequat quo excepteur, deserunt illum dolore offendit illum, fore et mentitum ex singulis do quid ullamco. Nam minim nostrud exercitation. Possumus tractavissent si expetendis. Vidisse culpa ullamco, expetendis familiaritatem ex occaecat, ita ab dolore cillum nisi non litteris in expetendis. Hic multos coniunctione. Malis ad expetendis si aute."}
+                    ];
+                }
+            }
+        });
+
+        myApp.controller("productsController", function(productsService, $scope ){
+            $scope.products = productsService.getAll();
+        });
+
+        myApp.controller("productInfoController", function($scope, productsService, $routeParams){
+            var pid = parseInt($routeParams.id);
+            $scope.product = productsService.getAll().filter(function(p){
+                return p.id === pid;
+            })[0];
+        })
+
+    </script>
+</head>
+<body ng-app="myApp">
+    <i>LoggedIn @ {{loggedInAt|date:'hh:mm:ss'}}</i>
+    <h1>Flopkart</h1>
+    <a href="#/products">Products</a>  <a href="#/customers">Customers</a>
+    <hr>
+    <div ng-view>
+
+    </div>
+</body>
+</html>

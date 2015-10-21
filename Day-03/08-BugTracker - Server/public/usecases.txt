@@ -5,10 +5,10 @@
 5. Display statistics - done
 6. Search for bugs - done
 7. Sort the bugs - done
-8. Improvise the bug display
-9. Display 'createdAt' for the bug
-10. Persist the bugs in the localStorage
-11. Persist the bugs in the server
+8. Improvise the bug display - done
+9. Display 'createdAt' for the bug - done
+10. Persist the bugs in the localStorage - done
+11. Persist the bugs in the server - done
 ==================
 Create a Project Module with list the projects
 Link the project with the bugs

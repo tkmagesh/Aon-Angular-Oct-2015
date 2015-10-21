@@ -1,0 +1,7 @@
+<h2>{{product.name}}</h1>
+<div style="font-weight:bold">Cost : <span style="color:red; font-style:italic; font-weight:bold">{{product.cost | currency}}</span></div>
+<br><br>
+<div>{{product.desc}}</div>
+<br><br><br>
+<hr>
+<div ng-hide="product.units === 0">Hurry up! Only <span style="font-weight : bold" >{{product.units}}</span> are left!!!</div>
