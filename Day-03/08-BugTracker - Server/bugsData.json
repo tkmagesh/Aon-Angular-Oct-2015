@@ -1,0 +1,28 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "name": "Data Persistence inconsistent",
+      "isClosed": false,
+      "createdAt": "2015-09-23T09:21:27.909Z"
+    },
+    {
+      "id": 3,
+      "name": "Stack overflow error",
+      "isClosed": false,
+      "createdAt": "2015-09-21T09:21:27.909Z"
+    },
+    {
+      "id": 4,
+      "name": "Undefined is not a function",
+      "isClosed": false,
+      "createdAt": "2015-09-30T06:39:04.167Z"
+    },
+    {
+      "id": 5,
+      "name": "User authentication fails",
+      "isClosed": false,
+      "createdAt": "2015-10-21T06:55:24.756Z"
+    }
+  ]
+}

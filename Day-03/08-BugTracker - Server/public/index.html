@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <style>
+        .stats{
+            font-size: 18pt;
+        }
+        section{
+            margin-bottom: 10px;
+        }
+        .closed {
+            color: red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        li div{
+            cursor: pointer;
+        }
+        li .bugName{
+            font-size: 16pt;
+        }
+        li .dateValue{
+            font-style: italic;
+            color: gray;
+            font-size: small;
+        }
+        li{
+            border: 1px solid gray;
+            border-radius: 5px;
+            background-color: #e7e7e7;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        ol{
+            list-style: none;
+            width: 60%;
+        }
+    </style>
+    <script src="angular.js"></script>
+    <script src="moment.js"></script>
+    <script src="utils.js"></script>
+    <script>
+    var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
+    bugTrackerApp.value("dateService", {
+        now : function(){
+            return new Date();
+        }
+    })
+
+    bugTrackerApp.factory("Bug", function(dateService){
+        function Bug(defaults){
+            this.id = defaults.id || 0;
+            this.name = defaults.name || '';
+            this.isClosed = defaults.isClosed || false;
+            this.createdAt = defaults.createdAt || dateService.now();
+        }
+        Bug.prototype.toggle = function(){
+            this.isClosed = !this.isClosed;
+        }
+        return Bug;
+    });
+
+    bugTrackerApp.factory("bugService", function($http, Bug, $q){
+        return {
+            getAll : function(){
+
+                var defered = $q.defer();
+
+                var p = $http.get("/bugs");
+                p.then(function(response){
+                    console.log("returning data");
+                    var result = response.data.map(function(bugData){
+                        return new Bug(bugData);
+                    });
+                    defered.resolve(result);
+                });
+
+                return defered.promise;
+                console.log("returning from getAll");
+            },
+            save : function(bug){
+                var defered = $q.defer();
+                if (bug.id === 0){
+                    $http.post("/bugs", bug)
+                        .then(function(response){
+                            defered.resolve(new Bug(response.data));
+                        });
+                } else {
+                    $http.put("/bugs/" + bug.id, bug)
+                        .then(function(response){
+                            defered.resolve(new Bug(response.data));
+                        });
+                }
+                return defered.promise;
+            },
+            remove : function(bug){
+                var defered = $q.defer();
+                $http
+                    .delete("/bugs/" + bug.id)
+                    .then(function(response){
+                        defered.resolve(response);
+                    });
+                return defered.promise;
+            }
+        }
+    })
+
+    bugTrackerApp.controller("bugsController", function($scope, Bug, bugService){
+
+        $scope.bugs = [];
+
+        bugService.getAll().then(function(bugs){
+            $scope.bugs = bugs;
+        });
+
+        $scope.newBugName = '';
+        $scope.addNew = function(){
+            bugService.save(new Bug({name : $scope.newBugName}))
+                .then(function(newBug){
+                    $scope.bugs.push(newBug);
+                })
+        };
+        $scope.toggleStatus = function(bug){
+            bug.toggle();
+            bugService.save(bug);
+        };
+        $scope.removeClosed = function(){
+            for(var i= $scope.bugs.length-1; i>=0; i--){
+                if ($scope.bugs[i].isClosed){
+                    bugService.remove($scope.bugs[i]);
+                    $scope.bugs.splice(i,1);
+                }
+            }
+        }
+    });
+
+   /* bugTrackerApp.filter('toClosedCount', function(){
+        return function(bugs){
+            var result = 0;
+            for(var i=0; i< bugs.length; i++)
+                if (bugs[i].isClosed)
+                    ++result;
+            return result;
+        }
+    });
+*/
+
+    bugTrackerApp.filter('toClosedCount', function($filter){
+        var builtinFilter = $filter('filter');
+        return function(bugs){
+            return builtinFilter(bugs, {isClosed : true}).length;
+        }
+    });
+
+
+    </script>
+</head>
+<body ng-app="bugTrackerApp" ng-controller="bugsController">
+    <h1>Bug Tracker</h1>
+    <section class="stats">
+        <!--<span class="closed">{{ (bugs | filter:{isClosed: true}).length }}</span>-->
+        <span class="closed">{{ bugs | toClosedCount }}</span>
+
+        /
+        <span>{{bugs.length}}</span>
+    </section>
+    <section class="search">
+        <label for="">Search :</label>
+        <input type="text" ng-model="searchBug.name">
+    </section>
+    <section class="sort">
+        <label for="">Order By:</label>
+        <input type="text" ng-model="sortBugsBy">
+        <label for="">Descending ? :</label>
+        <input type="checkbox" ng-model="sortBugOrder">
+    </section>
+    <section class="list">
+        <label for="">Bug :</label>
+        <input type="text" ng-model="newBugName">
+        <input type="button" value="Add Bug" ng-click="addNew()">
+        <input type="button" value="Remove Closed" ng-click="removeClosed()">
+        <ol>
+            <li ng-repeat="bug in bugs | filter:searchBug | orderBy:sortBugsBy:sortBugOrder" >
+                <div class='bugName'
+                    ng-class="{closed : bug.isClosed}"
+                    ng-click="toggleStatus(bug)"
+                >{{bug.name | trimText:30}}</div>
+                <div class='dateValue'>{{bug.createdAt | toMoment}}</div>
+            </li>
+        </ol>
+    </section>
+</body>
+</html>

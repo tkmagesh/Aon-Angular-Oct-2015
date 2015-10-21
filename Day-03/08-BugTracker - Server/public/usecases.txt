@@ -1,0 +1,28 @@
+1. Add a new bug - done
+2. List all the bugs - done
+3. Toggle the completion status of the bug - done
+4. Remove completed bugs - done
+5. Display statistics - done
+6. Search for bugs - done
+7. Sort the bugs - done
+8. Improvise the bug display
+9. Display 'createdAt' for the bug
+10. Persist the bugs in the localStorage
+11. Persist the bugs in the server
+==================
+Create a Project Module with list the projects
+Link the project with the bugs
+
+
+
+window.localStorage
+    - key/value store
+    - both key and value have to be strings
+        * use angular.toJson() and angular.fromJson() accordingly
+    - apis
+        * setItem(key, value)
+        * getItem(key) => value
+        * removeItem(key)
+        * key(index) => key at index
+        * clear()
+        * length
